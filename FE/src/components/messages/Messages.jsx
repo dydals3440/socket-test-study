@@ -1,9 +1,12 @@
 import Message from "./Message.jsx";
 import useGetMessages from "../../hooks/useGetMessages.js";
 import {useEffect, useRef} from 'react'
+import useListenMessages from "../../hooks/useListenMessages.js";
 
 const Messages = () => {
     const {messages, loading} = useGetMessages();
+
+    useListenMessages();
 
     // 이걸 함으로서, 채팅 칠 떄, 계속 스크롤 아래로 유지 가능.
     const lastMessageRef = useRef();
