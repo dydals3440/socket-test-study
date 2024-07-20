@@ -1,10 +1,30 @@
-// Importing the GenderCheckbox component from the components folder
 import GenderCheckbox from "../components/GenderCheckbox.jsx";
+import {useState} from "react";
 
-// Importing the Link component from react-router-dom for navigation
 import {Link} from "react-router-dom";
+import useSignup from "../hooks/useSignup.js";
 
 const SignUp = () => {
+    const [formData, setFormData] = useState({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        gender: ''
+    });
+
+    const {loading, signup} = useSignup();
+
+    const handleCheckboxChange = (gender) => {
+        setFormData({...formData, gender})
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        await signup(formData);
+    }
+
     return (
         <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
             <div className='w-full p-6 rounded-lg shadow-md bg-gray-200'>
@@ -12,7 +32,7 @@ const SignUp = () => {
                     Signup to
                     <span className="text-blue-700"> Chat Application</span>
                 </h1>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div>
                         <label className='label p-2'>
                             <span className='text-base label-text'>Username</span>
@@ -21,6 +41,10 @@ const SignUp = () => {
                             type='text'
                             placeholder='Enter Username'
                             className='w-full input input-bordered h-10'
+                            value={formData.username}
+                            onChange={(e) => setFormData({
+                                ...formData, username: e.target.value
+                            })}
                         />
                     </div>
                     <div>
@@ -31,6 +55,10 @@ const SignUp = () => {
                             type='email'
                             placeholder='example@email.com'
                             className='w-full input input-bordered h-10'
+                            value={formData.email}
+                            onChange={(e) => setFormData({
+                                ...formData, email: e.target.value
+                            })}
                         />
                     </div>
                     <div>
@@ -41,9 +69,29 @@ const SignUp = () => {
                             type='password'
                             placeholder='Enter Password'
                             className='w-full input input-bordered h-10'
+                            value={formData.password}
+                            onChange={(e) => setFormData({
+                                ...formData, password: e.target.value
+                            })}
                         />
                     </div>
-                    <GenderCheckbox/>
+                    <div>
+                        <label className='label p-2'>
+                            <span className='text-base label-text'>Confirm Password</span>
+                        </label>
+                        <input
+                            type='password'
+                            placeholder='Confirm Password'
+                            className='w-full input input-bordered h-10'
+                            value={formData.confirmPassword}
+                            onChange={(e) => setFormData({
+                                ...formData, confirmPassword: e.target.value
+                            })}
+                        />
+                    </div>
+
+                    <GenderCheckbox onCheckboxChange={handleCheckboxChange} selectedGender={formData.gender}/>
+
                     <Link
                         to={"/login"}
                         className="text-sm hover:underline hover:text-blue-600 mt-2 inline-block"
