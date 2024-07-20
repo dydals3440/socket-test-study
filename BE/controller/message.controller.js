@@ -1,5 +1,5 @@
-import Conversation from "../models/conversation.model.js";
-import Message from "../models/message.model.js";
+import Conversation from "../models/conversation.model.js"
+import Message from "../models/message.model.js"
 
 export const sendMessage = async (req, res, next) => {
     try {
@@ -42,5 +42,26 @@ export const sendMessage = async (req, res, next) => {
         res.status(201).json(newMessage);
     } catch (error) {
         next(error);
+    }
+}
+
+export const getMessage = async (req, res, next) => {
+    try {
+        const {id: userToMessage} = req.params
+        const senderId = req.user.id
+
+        const conversation = await Conversation.findOne({
+            participants: {$all: [senderId, userToMessage]},
+        }).populate("messages")
+
+        if (!conversation) {
+            return res.status(200).json([])
+        }
+
+        const messages = conversation.messages
+
+        res.status(200).json(messages)
+    } catch (error) {
+        next(error)
     }
 }
