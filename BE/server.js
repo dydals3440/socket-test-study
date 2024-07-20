@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from "mongoose";
 import authRoutes from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
+import messageRoute from "./routes/message.route.js";
 
 dotenv.config();
 
@@ -30,9 +31,10 @@ app.get("/", (req, res) => {
 
 
 app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoute);
 
 app.listen(PORT, () => {
-    console.log("Server started on port" + PORT);
+    console.log("Server started on port!" + PORT);
 });
 
 // error handler
